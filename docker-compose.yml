@@ -1,0 +1,27 @@
+version: "3"
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+
+  web:
+    build:
+      context: web
+    restart: always
+    volumes:
+      - ./web/html:/var/www/html
+    ports:
+      - 8080:80
+    links:
+      - db
+      - mailcatcher
+    depends_on:
+      - db
+      - mailcatcher
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - 1080:1080
+      - 1025:1025
